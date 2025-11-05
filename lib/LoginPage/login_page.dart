@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'signup_page.dart';
-import 'home_page.dart';
+import '../Admin/admin_home.dart';
+import '../Customer/customer_home.dart'; // customer page import
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -22,10 +23,20 @@ class _LoginPageState extends State<LoginPage> {
       );
 
       if (!mounted) return;
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const HomePage()),
-      );
+
+      // Role check: simple email-based
+      if (_emailController.text.trim() == 'admin@example.com') {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const AdminHomePage()),
+        );
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const CustomerHomePage()),
+        );
+      }
+
     } on FirebaseAuthException catch (e) {
       String message = '';
       if (e.code == 'user-not-found') {
@@ -48,7 +59,10 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
-        title: const Text("Login Page" , style: TextStyle(color: Colors.white , fontWeight: FontWeight.bold),),
+        title: const Text(
+          "Login Page",
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
         centerTitle: true,
         backgroundColor: Colors.green,
       ),
@@ -106,7 +120,8 @@ class _LoginPageState extends State<LoginPage> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const SignUpPage()),
+                      MaterialPageRoute(
+                          builder: (context) => const SignUpPage()),
                     );
                   },
                   child: const Text(
