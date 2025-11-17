@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'signup_page.dart';
 import '../Admin/admin_home.dart';
 import '../Customer/customer_home.dart'; // customer page import
@@ -25,7 +26,7 @@ class _LoginPageState extends State<LoginPage> {
       if (!mounted) return;
 
       // Role check: simple email-based
-      if (_emailController.text.trim() == 'admin@example.com') {
+      if (_emailController.text.trim() == 'admin@gmail.com') {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const AdminHomePage()),
@@ -49,7 +50,7 @@ class _LoginPageState extends State<LoginPage> {
 
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(message)),
+        SnackBar(content: Text(message, style: GoogleFonts.poppins())),
       );
     }
   }
@@ -57,14 +58,17 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
+      backgroundColor: Colors.purple[50],
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           "Login Page",
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: GoogleFonts.poppins(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         centerTitle: true,
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.purple,
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -73,9 +77,15 @@ class _LoginPageState extends State<LoginPage> {
           children: [
             TextField(
               controller: _emailController,
+              style: GoogleFonts.poppins(),
               decoration: InputDecoration(
                 labelText: "Email",
-                prefixIcon: const Icon(Icons.email),
+                labelStyle: GoogleFonts.poppins(color: Colors.purple),
+                prefixIcon: const Icon(Icons.email, color: Colors.purple),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(color: Colors.purple),
+                ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -85,9 +95,15 @@ class _LoginPageState extends State<LoginPage> {
             TextField(
               controller: _passwordController,
               obscureText: true,
+              style: GoogleFonts.poppins(),
               decoration: InputDecoration(
                 labelText: "Password",
-                prefixIcon: const Icon(Icons.lock),
+                labelStyle: GoogleFonts.poppins(color: Colors.purple),
+                prefixIcon: const Icon(Icons.lock, color: Colors.purple),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(color: Colors.purple),
+                ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -99,15 +115,19 @@ class _LoginPageState extends State<LoginPage> {
               height: 50,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
+                  backgroundColor: Colors.purple,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
                 onPressed: signInWithEmailAndPassword,
-                child: const Text(
+                child: Text(
                   "Login",
-                  style: TextStyle(fontSize: 18, color: Colors.white),
+                  style: GoogleFonts.poppins(
+                    fontSize: 18,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
@@ -115,7 +135,10 @@ class _LoginPageState extends State<LoginPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text("Don't have an account?"),
+                Text(
+                  "Don't have an account?",
+                  style: GoogleFonts.poppins(),
+                ),
                 TextButton(
                   onPressed: () {
                     Navigator.push(
@@ -124,9 +147,12 @@ class _LoginPageState extends State<LoginPage> {
                           builder: (context) => const SignUpPage()),
                     );
                   },
-                  child: const Text(
+                  child: Text(
                     "Sign Up",
-                    style: TextStyle(color: Colors.blueGrey),
+                    style: GoogleFonts.poppins(
+                      color: Colors.purple,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 )
               ],

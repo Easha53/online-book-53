@@ -3,6 +3,7 @@ import '../Models/book_model.dart';
 import '../Services/book_service.dart';
 import 'add_book_page.dart';
 import '../Customer/customer_home.dart';
+import '../Orders/admin_orders_page.dart';
 
 class AdminHomePage extends StatelessWidget {
   const AdminHomePage({super.key});
@@ -13,83 +14,80 @@ class AdminHomePage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Admin Dashboard'),
         centerTitle: true,
+        backgroundColor: Colors.purple,
         actions: [
-
+          // Go to Customer Page
           IconButton(
-            icon: const Icon(Icons.store, color: Colors.redAccent),
-            tooltip: 'Go to Customer Page',
+            icon: const Icon(Icons.store, color: Colors.purpleAccent),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const CustomerHomePage()),
-              );
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const CustomerHomePage()));
             },
           ),
-          //
+
+          // Go to Orders Page
           IconButton(
-            icon: const Icon(Icons.add),
-            tooltip: 'Add Book',
+            icon: const Icon(Icons.list_alt, color: Colors.deepPurpleAccent),
+            tooltip: "Manage Orders",
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const AddBookPage()),
-              );
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminOrdersPage()));
+            },
+          ),
+
+          // Add Book Page
+          IconButton(
+            icon: const Icon(Icons.add, color: Colors.white),
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const AddBookPage()));
             },
           ),
         ],
       ),
+      backgroundColor: Colors.purple[50],
       body: StreamBuilder<List<Book>>(
         stream: BookService.getBooks(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('No books available.'));
-          }
+        builder: (_, snap) {
+          if (!snap.hasData) return const Center(child: CircularProgressIndicator(color: Colors.purple));
+          final books = snap.data!;
+          if (books.isEmpty) return const Center(child: Text("No books available", style: TextStyle(color: Colors.purple)));
 
-          final books = snapshot.data!;
           return ListView.builder(
             itemCount: books.length,
-            itemBuilder: (context, index) {
-              final book = books[index];
-
+            itemBuilder: (_, i) {
+              final book = books[i];
               return Card(
                 margin: const EdgeInsets.all(8),
                 elevation: 4,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 child: ListTile(
                   leading: const Icon(Icons.menu_book, color: Colors.deepPurple),
                   title: Text(
                     book.title,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.deepPurple),
                   ),
                   subtitle: Text(
                     'Author: ${book.author}\nCategory: ${book.category}\nPrice: ৳${book.price}',
-                    style: const TextStyle(fontSize: 13),
+                    style: const TextStyle(color: Colors.purple),
                   ),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      // 🔹 Edit Book
+                      // Edit
                       IconButton(
-                        icon: const Icon(Icons.edit, color: Colors.blue),
+                        icon: const Icon(Icons.edit, color: Colors.purple),
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => AddBookPage(book: book)),
-                          );
+                          Navigator.push(context, MaterialPageRoute(builder: (_) => AddBookPage(book: book)));
                         },
                       ),
-                      // 🔹 Delete Book
+                      // Delete
                       IconButton(
-                        icon: const Icon(Icons.delete, color: Colors.red),
+                        icon: const Icon(Icons.delete, color: Colors.redAccent),
                         onPressed: () async {
-                          final messenger = ScaffoldMessenger.of(context);
                           await BookService.deleteBook(book.id);
-                          messenger.showSnackBar(
+                          ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
-                                content: Text('Book deleted successfully!')),
+                              content: Text('Book deleted successfully!'),
+                              backgroundColor: Colors.purple,
+                            ),
                           );
                         },
                       ),
